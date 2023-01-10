@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment # what to create?
+metadata:
+  name: app-deployment
+spec: # specification for deployment resource
+  replicas: 1 # how many replicas of pods we want to create
+  selector:
+    matchLabels:
+      app: counter-app
+  template: # blueprint for pods
+    metadata:
+      labels:
+        app: counter-app # service will look for this label
+    spec: # specification for pods
+      containers: # we can have one or more containers
+      - name: counter-app
+        image: yavarkhodadadi/counter-app:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80   
+        env:
+        #- name: MARIADB_RANDOM_ROOT_PASSWORD
+        - name: REDIS-HOST
+          value: "redis-service" # if it is 1 and root_password is set, root_password takes precedance
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: counter-app
+  name: app-service
+  namespace: redis-counter
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: counter-app
+  sessionAffinity: None
+  type: NodePort
