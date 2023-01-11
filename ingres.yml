@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Real-IP: $remote_addr";
   name: minimal-ingress
@@ -11,7 +11,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /counter(/|$)(.*)
         pathType: Prefix
         backend:
           service:
