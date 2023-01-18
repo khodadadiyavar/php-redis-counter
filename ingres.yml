@@ -13,7 +13,6 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - counter-app.duckdns.org
     secretName: miniapi-production-certificate
   rules:
     - host: counter-app.duckdns.org
