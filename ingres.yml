@@ -9,8 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: counter-app.duckdns.org
-      http:
+    - http:
         paths:
           - path: /counter(/|$)(.*)
             pathType: Prefix
