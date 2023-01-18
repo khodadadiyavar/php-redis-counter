@@ -5,16 +5,27 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Real-IP: $remote_addr";
-  name: minimal-ingress
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt-prod"
+  name: counter-ingress
 spec:
   ingressClassName: nginx
+<<<<<<< HEAD
+=======
+  tls:
+  - hosts:
+    - counter-app.duckdns.org
+    secretName: miniapi-production-certificate
+>>>>>>> 5b8dba2 (add support for https)
   rules:
-  - http:
-      paths:
-      - path: /counter(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: app-service
-            port:
-              number: 8080
+    - host: counter-app.duckdns.org
+      http:
+        paths:
+          - path: /counter(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: app-service
+                port:
+                  number: 8080

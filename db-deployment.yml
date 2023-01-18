@@ -58,11 +58,11 @@ metadata:
   labels:
     app: redis
   name: redis-service
-  namespace: redis-counter
+  namespace: counter-app
 spec:
-  clusterIP: 10.110.121.159
+  clusterIP: 10.20.121.159
   clusterIPs:
-  - 10.110.121.159
+  - 10.20.121.159
   internalTrafficPolicy: Cluster
   ipFamilies:
   - IPv4

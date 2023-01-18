@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment # what to create?
 metadata:
   name: app-deployment
+  namespace: counter-app
 spec: # specification for deployment resource
   replicas: 1 # how many replicas of pods we want to create
   selector:
@@ -29,7 +30,7 @@ metadata:
   labels:
     app: counter-app
   name: app-service
-  namespace: redis-counter
+  namespace: counter-app
 spec:
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -42,4 +43,4 @@ spec:
   selector:
     app: counter-app
   sessionAffinity: None
-  type: NodePort
+  type: NodePort 
