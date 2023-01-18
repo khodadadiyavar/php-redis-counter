@@ -11,13 +11,10 @@ metadata:
   name: counter-ingress
 spec:
   ingressClassName: nginx
-<<<<<<< HEAD
-=======
   tls:
   - hosts:
     - counter-app.duckdns.org
     secretName: miniapi-production-certificate
->>>>>>> 5b8dba2 (add support for https)
   rules:
     - host: counter-app.duckdns.org
       http:
