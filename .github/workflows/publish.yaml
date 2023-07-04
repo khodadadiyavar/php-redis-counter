@@ -1,0 +1,62 @@
+name: publish
+on:
+  push:
+    tags:
+      - 'v*'
+    paths-ignore:
+      - 'manifests/**'
+env:
+  REGISTRY: ghcr.io/speakapbv
+  IMAGE_NAME: app-sharepoint
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: checkout
+        uses: actions/checkout@v3
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io/speakapbv/app-sharepoint
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Extract metadata for the Docker image
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY  }}/${{ env.IMAGE_NAME }}
+          tags: type=match,pattern=v(.*),group=1
+      -
+        name: Build and publish the app-sharepoint Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/amd64,linux/arm64
+
+#  clean-ghcr:
+#    needs: Publish
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Delete all test containers older than a month, using a wildcard
+#        uses: snok/container-retention-policy@v2
+#        with:
+#          image-names: app-sharepoint*
+#          cut-off: 1 hour ago UTC+1
+#          account-type: org
+#          timestamp-to-use: created_at
+#          org-name: speakapbv
+#          keep-at-least: 2
+#          token: ${{ secrets.DEL_PAT }}
